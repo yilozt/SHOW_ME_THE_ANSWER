@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name     One_Key_MOOC_HOMEWORK
-// @version  1
+// @version  0.0.0
 // @grant    none
 // @match        *://www.icourse163.org/learn/*
+// @match        *://www.icourse163.org/spoc/learn/*
+// @author  caigoul
 // ==/UserScript==
 
 function F_ck_One_HomeWork() {
@@ -46,6 +48,28 @@ if (window.location.hash.indexOf("#/learn/hw?id=") != -1) {
     }, 2000);
   };
 }
+
+// show_me_the_answer
+var button2 = document.createElement("button");
+button2.innerHTML = "SHOW_ME_THE_ANSWER";
+button2.className = "u-btn u-btn-default f-fl";
+button2.style.position = "fixed";
+button2.style.top = "250px";
+button2.style.left = "0px";
+button2.style.zIndex = "50";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(button2);
+button2.onclick = function() {
+  parse_answer(answers => {
+    create_Window(answers);
+    if (location.hash.indexOf("learn/hw?id=") != -1) {
+      show_answer_in_homework(answers);
+    }
+    if (location.hash.indexOf("learn/quiz?id=") != -1) {
+      show_answer_in_quiz(answers);
+    }
+  });
+};
 
 var get_aid = function(callback = alert) {
   var id;
@@ -145,9 +169,43 @@ var parse_answer = function(callback) {
   });
 };
 
-parse_answer(answers => {
-  create_Window(answers);
-});
+var show_answer_in_homework = function(answers) {
+  var answersarr = [];
+  answers.split('title="').forEach(item => {
+    const msg = item.split(/maxScore=\d;s\d*.msg="/);
+    msg.shift();
+    answersarr.push(msg);
+  });
+  answersarr.shift();
+  questions = document.getElementsByClassName(
+    "f-richEditorText j-richTxt f-fl"
+  );
+  for (let i = 0; i < questions.length; i++) {
+    var answer = answersarr[i].join("");
+    answer = answer.replace(/";/g, "");
+    questions[i].innerHTML += answer;
+  }
+};
+
+var show_answer_in_quiz = function(answers) {
+  var tmp = answers.split('title="');
+  var answersarr = [];
+  var questions = document.getElementsByClassName("f-richEditorText j-richTxt");
+  tmp.shift();
+  tmp.forEach(item => {
+    var match_answers = item.match(/answer=true;s\d+\.content="(.*?)"/);
+    if (match_answers) {
+      answersarr.push(match_answers[1]);
+    } else {
+      answersarr.push(item);
+    }
+  });
+  for (let i = 0; i < questions.length; i++) {
+    questions[i].innerHTML += "<p>SHOW_ME_THE_ANSWER___>>>>>>>>></p>\n";
+    questions[i].innerHTML += answersarr[i];
+    questions[i].innerHTML += "<hr>";
+  }
+};
 
 // 显示答案.jpg
 var create_Window = function(answers) {
