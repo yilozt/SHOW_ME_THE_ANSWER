@@ -7,6 +7,8 @@
 // @author  caigoul
 // ==/UserScript==
 
+
+
 function F_ck_One_HomeWork() {
   var s = document.getElementsByClassName("s");
   for (var i = 0; i < s.length; i++) {
@@ -188,22 +190,23 @@ var show_answer_in_homework = function(answers) {
 };
 
 var show_answer_in_quiz = function(answers) {
-  var tmp = answers.split('title="');
-  var answersarr = [];
-  var questions = document.getElementsByClassName("f-richEditorText j-richTxt");
-  tmp.shift();
-  tmp.forEach(item => {
-    var match_answers = item.match(/answer=true;s\d+\.content="(.*?)"/);
+    var tmp = answers.split('title="');
+    var answersarr = [];
+    var questions = document.getElementsByClassName("f-richEditorText j-richTxt");
+    tmp.shift();
+    for (let i = 0; i < tmp.length; i++) {
+      var match_answers = tmp[i].match(/answer=true;s\d+\.content="(.*?)"/);
+      if (match_answers) {
+        answersarr[i] = match_answers[1]
+      }
+    match_answers = tmp[i].match(/stdAnswer="(.*?)"/)
     if (match_answers) {
-      answersarr.push(match_answers[1]);
-    } else {
-      answersarr.push(item);
-    }
-  });
+      answersarr[i+1] = match_answers[1]
+      }
+    };
   for (let i = 0; i < questions.length; i++) {
-    questions[i].innerHTML += "<p>SHOW_ME_THE_ANSWER___>>>>>>>>></p>\n";
+    questions[i].innerHTML += '<hr>'
     questions[i].innerHTML += answersarr[i];
-    questions[i].innerHTML += "<hr>";
   }
 };
 
