@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     One_Key_MOOC_HOMEWORK
-// @version  1
+// @version  1.1
 // @grant    none
 // @match        *://www.icourse163.org/learn/*
 // ==/UserScript==
@@ -46,6 +46,28 @@ if (window.location.hash.indexOf("#/learn/hw?id=") != -1) {
     }, 2000);
   };
 }
+
+// show_me_the_answer
+var button2 = document.createElement("button");
+button2.innerHTML = "SHOW_ME_THE_ANSWER";
+button2.className = "u-btn u-btn-default f-fl";
+button2.style.position = "fixed";
+button2.style.top = "250px";
+button2.style.left = "0px";
+button2.style.zIndex = "50";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(button2);
+button2.onclick = function() {
+  parse_answer(answers => {
+    create_Window(answers);
+    if (location.hash.indexOf("learn/hw?id=") != -1) {
+      show_answer_in_homework(answers);
+    }
+    if (location.hash.indexOf("learn/quiz?id=") != -1) {
+      show_answer_in_quiz(answers);
+    }
+  });
+};
 
 var get_aid = function(callback = alert) {
   var id;
@@ -145,13 +167,60 @@ var parse_answer = function(callback) {
   });
 };
 
-parse_answer(answers => {
-  create_Window(answers);
-});
+var show_answer_in_homework = function(answers) {
+  var answersarr = [];
+  var titles = []
+  answers.split('title="').forEach(item => {
+    const msg = item.split(/maxScore=\d*;s\d*.msg="/);
+    titles.push(msg[0])
+    answersarr.push(msg[1]);
+  });
+  titles.shift();
+  answersarr.shift();
+  questions = document.getElementsByClassName(
+    "f-richEditorText j-richTxt f-fl"
+  );
+  for (let i = 0; i < questions.length; i++) {
+    var answer = answersarr[i];
+    answer = answer.replace(/";/g, "");
+    questions[i].innerHTML = titles[i].replace(/";/g, "");
+    questions[i].innerHTML += '<h1 style="color:red;font-family:\'楷体\'">答案:</h1>'
+    questions[i].innerHTML += answer;
+  }
+};
+
+var show_answer_in_quiz = function(answers) {
+    var tmp = answers.split('title="');
+    var answersarr = [];
+    var questions = document.getElementsByClassName("f-richEditorText j-richTxt");
+    tmp.shift();
+    for (let i = 0; i < tmp.length; i++) {
+      var match_answers = tmp[i].match(/answer=true;s\d+\.content="(.*?)"/);
+      if (match_answers) {
+        answersarr[i] = match_answers[1]
+      }
+    match_answers = tmp[i].match(/stdAnswer="(.*?)"/)
+    if (match_answers) {
+      answersarr[i+1] = match_answers[1]
+      }
+    };
+  for (let i = 0; i < questions.length; i++) {
+    questions[i].innerHTML += '<hr>'
+    questions[i].innerHTML += '<h1 style="color:red;font-family:\'楷体\'">答案:</h1>'
+    questions[i].innerHTML += answersarr[i];
+  }
+  
+};
 
 // 显示答案.jpg
 var create_Window = function(answers) {
+  var id = document.getElementById("windows");
+  if(id){
+    return;
+  }
   var win = document.createElement("div");
+  var button3 = document.createElement("button");
+  win.setAttribute('id','windows');
   win.style.background = "#fff";
   win.style.width = "max-content";
   win.style.maxWidth = "800px";
@@ -165,6 +234,16 @@ var create_Window = function(answers) {
   win.style.zIndex = "100";
   win.innerHTML = answers;
   document.getElementsByTagName("body")[0].appendChild(win);
+  win.appendChild(button3);
+  button3.innerHTML = "close ";
+  button3.className = "u-btn u-btn-default f-fl";
+  button3.style.position = "fixed";
+  button3.style.top = "300px";
+  button3.style.left = "0px";
+  button3.style.zIndex = "50";
+  button3.onclick = function() {
+    body.removeChild(win);
+  };
   _drag(win);
 };
 
