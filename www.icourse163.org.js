@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     One_Key_MOOC_HOMEWORK
-// @version  0.0.0
+// @version  1.0.0
 // @grant    none
 // @match        *://www.icourse163.org/learn/*
 // @match        *://www.icourse163.org/spoc/learn/*
@@ -173,18 +173,22 @@ var parse_answer = function(callback) {
 
 var show_answer_in_homework = function(answers) {
   var answersarr = [];
+  var titles = []
   answers.split('title="').forEach(item => {
-    const msg = item.split(/maxScore=\d;s\d*.msg="/);
-    msg.shift();
-    answersarr.push(msg);
+    const msg = item.split(/maxScore=\d*;s\d*.msg="/);
+    titles.push(msg[0])
+    answersarr.push(msg[1]);
   });
+  titles.shift();
   answersarr.shift();
   questions = document.getElementsByClassName(
     "f-richEditorText j-richTxt f-fl"
   );
   for (let i = 0; i < questions.length; i++) {
-    var answer = answersarr[i].join("");
+    var answer = answersarr[i];
     answer = answer.replace(/";/g, "");
+    questions[i].innerHTML = titles[i].replace(/";/g, "");
+    questions[i].innerHTML += '<h1 style="color:red;font-family:\'楷体\'">答案:</h1>'
     questions[i].innerHTML += answer;
   }
 };
@@ -206,13 +210,21 @@ var show_answer_in_quiz = function(answers) {
     };
   for (let i = 0; i < questions.length; i++) {
     questions[i].innerHTML += '<hr>'
+    questions[i].innerHTML += '<h1 style="color:red;font-family:\'楷体\'">答案:</h1>'
     questions[i].innerHTML += answersarr[i];
   }
+  
 };
 
 // 显示答案.jpg
 var create_Window = function(answers) {
+  var id = document.getElementById("windows");
+  if(id){
+    return;
+  }
   var win = document.createElement("div");
+  var button3 = document.createElement("button");
+  win.setAttribute('id','windows');
   win.style.background = "#fff";
   win.style.width = "max-content";
   win.style.maxWidth = "800px";
@@ -226,6 +238,16 @@ var create_Window = function(answers) {
   win.style.zIndex = "100";
   win.innerHTML = answers;
   document.getElementsByTagName("body")[0].appendChild(win);
+  win.appendChild(button3);
+  button3.innerHTML = "close ";
+  button3.className = "u-btn u-btn-default f-fl";
+  button3.style.position = "fixed";
+  button3.style.top = "300px";
+  button3.style.left = "0px";
+  button3.style.zIndex = "50";
+  button3.onclick = function() {
+    body.removeChild(win);
+  };
   _drag(win);
 };
 
