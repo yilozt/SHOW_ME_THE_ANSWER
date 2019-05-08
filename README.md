@@ -8,18 +8,11 @@ __Press F5 before use, please. :ghost:__
 
 Have Fun :ghost:
 
-### `greasespot/Tampermonkey` + `js` = <img src='https://gss3.bdstatic.com/84oSdTum2Q5BphGlnYG/timg?wapp&quality=80&size=b150_150&subsize=20480&cut_x=0&cut_w=0&cut_y=0&cut_h=0&sec=1369815402&srctrace&di=025a2098797ebd8640060bcc4663cb9e&wh_rate=null&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fpic%2Fitem%2F562c11dfa9ec8a13424f9c95fc03918fa0ecc06a.jpg'></img>
+### `greasespot/Tampermonkey` + `js` = <img src='https://gss3.bdstatic.com/84oSdTum2Q5BphGlnYG/timg?wapp&quality=80&size=b150_150&subsize=20480&cut_x=0&cut_w=0&cut_y=0&cut_h=0&sec=1369815402&srctrace&di=025a2098797ebd8640060bcc4663cb9e&wh_rate=null&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fpic%2Fitem%2F562c11dfa9ec8a13424f9c95fc03918fa0ecc06a.jpg' style="vertical-align:middle;"></img>
 
 
 # Contributors
 
-- ##### <img src='https://avatars3.githubusercontent.com/u/32430186?s=40&v=4' style="width: 20px"></img> [caigoul](https://github.com/caigoul/)
+- ##### <img src='https://avatars3.githubusercontent.com/u/32430186?s=40&v=4' style="max-width: 20px; vertical-align:middle;"></img> [caigoul](https://github.com/caigoul/)
 
-- ##### <img src='https://avatars1.githubusercontent.com/u/45314715?s=60&v=4' style="width: 20px"></img> [CaiJi-bai](https://github.com/caigoul/)
-
-
-<style>
-img {
-    vertical-align:middle;
-}
-</style>
+- ##### <img src='https://avatars1.githubusercontent.com/u/45314715?s=60&v=4' style="max-width: 20px; vertical-align:middle;"></img> [CaiJi-bai](https://github.com/caigoul/)
