@@ -11,4 +11,3 @@ Have Fun :ghost:
 - __（づ￣3￣）づ╭`STAR`～__
 
 ### `greasespot/Tampermonkey` + `js` = :smirk:
-
