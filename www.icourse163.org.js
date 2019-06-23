@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name     One_Key_MOOC_HOMEWORK
-// @version  1.0.01
+// @version  1.0.04
 // @match        *://www.icourse163.org/learn/*
 // @match        *://www.icourse163.org/spoc/learn/*
-// @author  caigoul
+// @author  caigoul & Caiji-bai
 // @grant MIT
+// @description f*ck mooc homework and AutoRate Course
+// @namespace https://greasyfork.org/users/301293
 // ==/UserScript==
 
 console.log(
@@ -35,8 +37,8 @@ console.log(
 ├─┤  └─┐││││├─┘│  ├┤    ║├─┤└┐┌┘├─┤└─┐│  ├┬┘│├─┘ │    ││├┤ ││││ │
 ┴ ┴  └─┘┴┴ ┴┴  ┴─┘└─┘  ╚╝┴ ┴ └┘ ┴ ┴└─┘└─┘┴└─┴┴   ┴   ─┴┘└─┘┴ ┴└─┘
 _________________________________________________________________
-                author: caigoul & CaiJi-bai
-                        HAVE FUN!
+              author: caigoul & Caiji-bai
+                      HAVE FUN!
   `
 );
 
@@ -84,6 +86,7 @@ _________________________________________________________________
   }
 
   // show_me_the_answer
+  body = document.getElementsByTagName("body")[0];
   var button2 = document.createElement("button");
   button2.innerHTML = "SHOW_ME_THE_ANSWER";
   button2.className = "u-btn u-btn-default f-fl";
@@ -100,6 +103,12 @@ _________________________________________________________________
       }
       if (location.hash.indexOf("learn/quiz?id=") != -1) {
         show_answer_in_quiz(answers);
+      }
+      if (location.hash.indexOf("learn/examObject?eid=") != -1) {
+        show_answer_in_quiz(answers);
+      }
+      if (location.hash.indexOf("learn/examSubjective?eid=") != -1) {
+        show_answer_in_homework(answers);
       }
     });
   };
@@ -221,9 +230,11 @@ batchId=${aid}`;
       var answer = answersarr[i].join();
       answer = answer.replace(/";/g, "");
       questions[i].innerHTML = titles[i].replace(/";/g, "");
+      questions[i].innerHTML += "<hr>";
       questions[i].innerHTML +=
         "<h1 style=\"color:red;font-family:'楷体'\">答案:</h1>";
       questions[i].innerHTML += answer;
+      questions[i].innerHTML += "<hr>";
     }
   };
 
@@ -235,13 +246,17 @@ batchId=${aid}`;
     );
     tmp.shift();
     for (let i = 0; i < tmp.length; i++) {
-      var match_answers = tmp[i].match(/answer=true;s\d+\.content="(.*?)"/);
+      var match_answers = tmp[i].match(/answer=true;s\d+\.content="(.*?)"/g);
       if (match_answers) {
-        answersarr[i] = match_answers[1];
+        answersarr[i] = ''
+        match_answers.forEach(item => {
+            var answer = item.match(/answer=true;s\d+\.content="(.*?)"/)
+            answersarr[i] += answer[1];
+        })
       }
       match_answers = tmp[i].match(/stdAnswer="(.*?)"/);
       if (match_answers) {
-        answersarr[i + 1] = match_answers[1];
+        answersarr[i + 1] = match_answers[1].replace(/##%_YZPRLFH_%##/g, '或');
       }
     }
     for (let i = 0; i < questions.length; i++) {
@@ -249,6 +264,7 @@ batchId=${aid}`;
       questions[i].innerHTML +=
         "<h1 style=\"color:red;font-family:'楷体'\">答案:</h1>";
       questions[i].innerHTML += answersarr[i];
+      questions[i].innerHTML += "<hr>";
     }
   };
 
